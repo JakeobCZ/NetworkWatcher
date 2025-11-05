@@ -7,10 +7,20 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
+		<StartupObject></StartupObject>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="assets\icon_green.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\icon_red.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

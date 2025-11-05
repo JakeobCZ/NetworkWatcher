@@ -18,9 +18,9 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}" Width="300"/>
-                    <GridViewColumn Header="Typ" DisplayMemberBinding="{Binding Type}" Width="120"/>
-                    <GridViewColumn Header="Stav (Up)" Width="80">
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="300"/>
+                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="120"/>
+                    <GridViewColumn Header="Status (Up)" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding IsUp}" />
@@ -33,8 +33,9 @@
         </ListView>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Name="BtnSave" Width="90" Height="28" Margin="4" Click="BtnSave_Click">Uložit</Button>
-            <Button Name="BtnMinimize" Width="182" Height="28" Margin="4" Click="BtnMinimize_Click">Minimalizovat do tray</Button>
+            <Button Name="BtnSave" Width="90" Height="28" Margin="4" Click="BtnSave_Click">Save</Button>
+            <Button Name="BtnMinimize" Width="182" Height="28" Margin="4" Click="BtnMinimize_Click">"Minimize to tray"
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
