@@ -14,7 +14,7 @@
                     <GridViewColumn Width="30">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsIgnored, Mode=TwoWay}" ToolTip="Ignorovat tento adaptér"/>
+                                <CheckBox IsChecked="{Binding IsIgnored, Mode=TwoWay}" ToolTip="Ignore this adapter"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -34,7 +34,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Name="BtnSave" Width="90" Height="28" Margin="4" Click="BtnSave_Click">Save</Button>
-            <Button Name="BtnMinimize" Width="182" Height="28" Margin="4" Click="BtnMinimize_Click">"Minimize to tray"
+            <Button Name="BtnMinimize" Width="182" Height="28" Margin="4" Click="BtnMinimize_Click">Minimize to tray
             </Button>
         </StackPanel>
     </Grid>

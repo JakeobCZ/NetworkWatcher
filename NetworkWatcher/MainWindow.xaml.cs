@@ -29,6 +29,11 @@ namespace NetworkWatcher
             StartTimer();
             SetStartup(true);
             AdaptersList.DataContext = adapters;
+
+            // Minimalizace do tray při startu
+            this.WindowState = WindowState.Minimized;
+            this.ShowInTaskbar = false;
+            this.Hide();
         }
 
         private void InitializeNotifyIcon()
@@ -39,10 +44,9 @@ namespace NetworkWatcher
             string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "icon_green.ico");
             notifyIcon.Icon = new Icon(iconPath);
 
-
             var menu = new ContextMenuStrip();
             var open = new ToolStripMenuItem("Settings");
-            open.Click += (s, e) => Dispatcher.Invoke(() => { this.Show(); this.WindowState = WindowState.Normal; this.Activate(); });
+            open.Click += (s, e) => RestoreFromTray();
             var exit = new ToolStripMenuItem("Close");
             exit.Click += (s, e) =>
             {
@@ -53,10 +57,20 @@ namespace NetworkWatcher
             menu.Items.Add(exit);
             notifyIcon.ContextMenuStrip = menu;
 
-            notifyIcon.DoubleClick += (s, e) => Dispatcher.Invoke(() => { this.Show(); this.WindowState = WindowState.Normal; this.Activate(); });  
+            notifyIcon.DoubleClick += (s, e) => RestoreFromTray();
+        }
 
+        private void RestoreFromTray()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                this.Show();
+                this.WindowState = WindowState.Normal;
+                this.ShowInTaskbar = true;
+                this.Activate();
+            });
+        }
 
-}
         private void UpdateTrayIcon(bool everythingOk)
         {
             if (notifyIcon == null) return;
@@ -64,8 +78,6 @@ namespace NetworkWatcher
             string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", iconFile);
             notifyIcon.Icon = new Icon(iconPath);
         }
-
-
 
         void LoadAdapters()
         {
