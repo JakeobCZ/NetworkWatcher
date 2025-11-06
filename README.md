@@ -7,7 +7,7 @@ It sits in the system tray and alerts you whenever a new non-ignored network con
 
 - Monitors active network connections continuously.
 - Sends notifications via the tray icon when any new connection appears.
-- Designed to actively inform about active VPN connections.
+- Designed to inform about active VPN connections.
 - Can run in the background and start automatically with Windows.
 - Tray icon provides quick access to application controls.
 
