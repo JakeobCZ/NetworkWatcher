@@ -8,6 +8,8 @@ namespace NetworkWatcher
     public class SettingsStore
     {
         public List<string> IgnoredIds { get; set; } = new List<string>();
+        public List<string> IgnoredNames { get; set; } = new List<string>();
+        public bool MatchByName { get; set; }
 
         static string GetFolder()
         {

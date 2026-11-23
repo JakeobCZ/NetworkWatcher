@@ -9,11 +9,14 @@ It sits in the system tray and alerts you whenever a new non-ignored network con
 - Sends notifications via the tray icon when any new connection appears.
 - Designed to inform about active VPN connections.
 - Can run in the background and start automatically with Windows.
+- Automatic startup can be enabled or disabled directly in the application settings.
+- Allowed adapters can be matched either by their stable system ID or by name.
 - Tray icon provides quick access to application controls.
 
 ## Usage
 
-- Set up your "always on" adapters that should be ignored.
+- Choose whether allowed adapters should be identified by ID or name, then check the adapters that should be ignored.
+- Choose whether NetworkWatcher should start automatically with Windows and save the settings.
 - Keep NetworkWatcher running in the background.
 - Watch the tray icon for alerts about non-ignored connections.
 
