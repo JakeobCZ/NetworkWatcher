@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NetworkWatcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Network Watcher" Height="470" Width="760">
+        Title="Network Watcher" Height="470" Width="850" Icon="assets/app_icon.ico">
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,12 +12,7 @@
         <GroupBox Grid.Row="0" Header="Settings" Margin="0,0,0,8">
             <StackPanel Margin="8">
                 <CheckBox Name="ChkStartWithWindows" Content="Start NetworkWatcher automatically with Windows" Margin="0,0,0,8"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Identify ignored adapters by:" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                    <RadioButton Name="RbMatchById" Content="ID" GroupName="MatchMode" Margin="0,0,14,0" Checked="MatchMode_Checked"/>
-                    <RadioButton Name="RbMatchByName" Content="Name" GroupName="MatchMode" Checked="MatchMode_Checked"/>
-                </StackPanel>
-                <TextBlock Text="Checked adapters are allowed and will not trigger the warning icon." Foreground="Gray" Margin="0,6,0,0"/>
+                <TextBlock Text="Checked adapters are allowed. Choose ID or Name separately for every adapter." Foreground="Gray"/>
             </StackPanel>
         </GroupBox>
 
@@ -28,6 +23,13 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding IsIgnored, Mode=TwoWay}" ToolTip="Ignore this adapter"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Match by" Width="90">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding MatchModes}" SelectedItem="{Binding MatchMode, Mode=TwoWay}" Width="76"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -17,7 +17,6 @@ namespace NetworkWatcher
         DispatcherTimer? refreshTimer;
         SettingsStore settings;
         NotifyIcon? notifyIcon;
-        bool initializing = true;
 
         public MainWindow()
         {
@@ -26,13 +25,10 @@ namespace NetworkWatcher
             settings = SettingsStore.Load();
             adapters = new ObservableCollection<AdapterItem>();
             ChkStartWithWindows.IsChecked = IsStartupEnabled();
-            RbMatchByName.IsChecked = settings.MatchByName;
-            RbMatchById.IsChecked = !settings.MatchByName;
             InitializeNotifyIcon();
             LoadAdapters();
             StartTimer();
             AdaptersList.DataContext = adapters;
-            initializing = false;
 
             // Minimalizace do tray při startu
             this.WindowState = WindowState.Minimized;
@@ -97,7 +93,8 @@ namespace NetworkWatcher
                     Name = string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name,
                     Type = nic.NetworkInterfaceType.ToString(),
                     IsUp = nic.OperationalStatus == OperationalStatus.Up,
-                    IsIgnored = IsIgnored(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name)
+                    IsIgnored = FindRule(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name) != null,
+                    MatchMode = FindRule(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name)?.MatchByName == true ? "Name" : "ID"
                 });
             }
         }
@@ -134,7 +131,8 @@ namespace NetworkWatcher
                         Name = string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name,
                         Type = nic.NetworkInterfaceType.ToString(),
                         IsUp = nic.OperationalStatus == OperationalStatus.Up,
-                        IsIgnored = IsIgnored(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name)
+                        IsIgnored = FindRule(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name) != null,
+                        MatchMode = FindRule(nic.Id, string.IsNullOrWhiteSpace(nic.Name) ? nic.Description : nic.Name)?.MatchByName == true ? "Name" : "ID"
                     });
                 }
             }
@@ -145,42 +143,24 @@ namespace NetworkWatcher
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            settings.MatchByName = RbMatchByName.IsChecked == true;
-            if (settings.MatchByName)
-                settings.IgnoredNames = adapters.Where(a => a.IsIgnored).Select(a => a.Name).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-            else
-                settings.IgnoredIds = adapters.Where(a => a.IsIgnored).Select(a => a.Id).ToList();
+            settings.IgnoredAdapters = adapters.Where(a => a.IsIgnored).Select(a => new AdapterRule
+            {
+                Id = a.Id,
+                Name = a.Name,
+                MatchByName = a.MatchMode == "Name"
+            }).ToList();
+            settings.IgnoredIds.Clear();
+            settings.IgnoredNames.Clear();
 
             SetStartup(ChkStartWithWindows.IsChecked == true);
             settings.Save();
             System.Windows.MessageBox.Show("Settings saved.", "NetworkWatcher", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private bool IsIgnored(string id, string name) => settings.MatchByName
-            ? settings.IgnoredNames.Contains(name, StringComparer.OrdinalIgnoreCase)
-            : settings.IgnoredIds.Contains(id);
-
-        private void MatchMode_Checked(object sender, RoutedEventArgs e)
-        {
-            if (initializing || adapters.Count == 0) return;
-
-            bool matchByName = RbMatchByName.IsChecked == true;
-            var selected = adapters.Where(a => a.IsIgnored).ToList();
-            if (matchByName)
-            {
-                settings.IgnoredNames = selected.Select(a => a.Name).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-                foreach (var adapter in adapters)
-                    adapter.IsIgnored = settings.IgnoredNames.Contains(adapter.Name, StringComparer.OrdinalIgnoreCase);
-            }
-            else
-            {
-                settings.IgnoredIds = selected.Select(a => a.Id).ToList();
-                foreach (var adapter in adapters)
-                    adapter.IsIgnored = settings.IgnoredIds.Contains(adapter.Id);
-            }
-
-            settings.MatchByName = matchByName;
-        }
+        private AdapterRule? FindRule(string id, string name) => settings.IgnoredAdapters.FirstOrDefault(rule =>
+            rule.MatchByName
+                ? string.Equals(rule.Name, name, StringComparison.OrdinalIgnoreCase)
+                : string.Equals(rule.Id, id, StringComparison.Ordinal));
 
         private void BtnMinimize_Click(object sender, RoutedEventArgs e)
         {

@@ -5,8 +5,17 @@ using System.Text.Json;
 
 namespace NetworkWatcher
 {
+    public class AdapterRule
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public bool MatchByName { get; set; }
+    }
+
     public class SettingsStore
     {
+        public List<AdapterRule> IgnoredAdapters { get; set; } = new List<AdapterRule>();
+        // Legacy fields are retained so existing settings.json files migrate automatically.
         public List<string> IgnoredIds { get; set; } = new List<string>();
         public List<string> IgnoredNames { get; set; } = new List<string>();
         public bool MatchByName { get; set; }
@@ -27,11 +36,35 @@ namespace NetworkWatcher
             try
             {
                 var json = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<SettingsStore>(json) ?? new SettingsStore();
+                var settings = JsonSerializer.Deserialize<SettingsStore>(json) ?? new SettingsStore();
+                settings.MigrateLegacyRules();
+                return settings;
             }
             catch
             {
                 return new SettingsStore();
+            }
+        }
+
+        private void MigrateLegacyRules()
+        {
+            if (IgnoredAdapters.Count > 0) return;
+
+            if (MatchByName)
+            {
+                IgnoredAdapters.AddRange(IgnoredNames.ConvertAll(name => new AdapterRule
+                {
+                    Name = name,
+                    MatchByName = true
+                }));
+            }
+            else
+            {
+                IgnoredAdapters.AddRange(IgnoredIds.ConvertAll(id => new AdapterRule
+                {
+                    Id = id,
+                    MatchByName = false
+                }));
             }
         }
 
