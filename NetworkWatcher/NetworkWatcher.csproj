@@ -22,9 +22,7 @@
 	  <None Update="assets\icon_red.ico">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\app_icon.ico">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+	  <Resource Include="assets\app_icon.ico" />
 	</ItemGroup>
 
 </Project>
