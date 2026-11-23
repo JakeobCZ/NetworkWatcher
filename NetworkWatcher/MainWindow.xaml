@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NetworkWatcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Network Watcher" Height="470" Width="850" Icon="assets/app_icon.ico">
+        Title="Network Watcher" Height="470" Width="850">
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
